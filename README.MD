@@ -1,1 +1,1 @@
-# A collection of projects to develop my SQL skills.
+# Projects to develop my SQL skills.
