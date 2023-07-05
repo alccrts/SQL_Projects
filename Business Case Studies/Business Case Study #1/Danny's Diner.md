@@ -201,7 +201,7 @@ WHERE rank = 1;
 
 ***
 
-## 6. Which item was purchased first by the customer after they became a member?
+**6. Which item was purchased first by the customer after they became a member?**
 
 The question asks what customers bought after they become a member, but they data we have .  It is possible a customer became a member on the same day they made an order.  Given that we don't have a more finite 'time' data, we cannot be sure whether the customer became a member first or placed their order first.  To answer this question, I have made the assumption that if a customer placed an order on the same day they become a member, then they became a member first before placing the order.  This seems the most likely scenario, given that being a member comes with promotions that might affect their order.  However, it would be sensible to confirm this with Danny.  
 
@@ -227,7 +227,7 @@ SELECT* FROM members_orders
 WHERE rank = 1
 ````
 
-## 7. Which item was purchased just before the customer became a member?
+**7. Which item was purchased just before the customer became a member?**
 
 As discussed in Question 6, to answer this question I have assumed we are searching for orders placed on dates before the customer became a member.  I have therefore employed the same query as above but have inverted the boolean operator to return only orders before the join date in the CTE table.  I also inverted the sorting from **ASC** to **DESC**.  Customer A ordered two products just before they became a member, Sushi and Curry, whereas Customer B purchased only Sushi.  
 
@@ -252,9 +252,9 @@ SELECT* FROM members_orders
 WHERE rank = 1
 ````
 
-## 8. What is the total items and amount spent for each member before they became a member?
+**8. What is the total items and amount spent for each member before they became a member?**
 
-Here I used **SUM** to total the amount spent by each customer and **COUNT** to count the number of items.  Crucially, these were results were joined with the members table using **JOIN** so that I could filter them to show only results before the join date of members.  I then repeated this query 
+Here I used **SUM** to total the amount spent by each customer and **COUNT** to count the number of items.  These were results were joined with the members table using **JOIN** so that I could filter them to show only results before the join date of members.  I then repeated this query but filtered the results to include only results following the join date of members.  This way I could compare Customer spending before and after their membership to see if the membership was encouraging them to pay more.  In the results below we can see that Customer A began to spend more after he became a member, whereas Customer B spend a little bit less.  We are therefore unable to say for certain if membership encourages customers to pay more.   
 
 | customer_id | total_spent_before | total_items_before | total_spent_after | total_items_after |
 | ----------- | ------------------ | ------------------ | ----------------- | ----------------- |
@@ -302,5 +302,33 @@ SELECT before.customer_id, total_spent_before, total_items_before, total_spent_a
 FROM before JOIN after ON (before.customer_id=after.customer_id)
 
 ````
+
+**9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?**
+
+To calcuate the points each customer has, I used the **CASE** operator to multiply their total spending by the 1 point for each dollar.  By referring to the ``product_id``, I was able to multiply spending on Sushi x2.  
+
+| customer_id | points |
+| ----------- | ------ |
+| A           | 860    |
+| B           | 940    |
+| C           | 360    |
+
+SELECT 
+	sales.customer_id, SUM(CASE (menu.product_id)
+	WHEN 1 THEN 20*price
+    ELSE 10*price
+    END) AS points
+FROM 
+	dannys_diner.menu
+JOIN 
+	dannys_diner.sales ON (sales.product_id=menu.product_id)
+GROUP BY
+	sales.customer_id
+ORDER BY
+	customer_id;
+
+
+
+## 10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
 
 ## Conclusion 
