@@ -252,5 +252,32 @@ SELECT* FROM members_orders
 WHERE rank = 1
 ````
 
+## 8. What is the total items and amount spent for each member before they became a member?
+
+Here I used **SUM** to total the amount spent by each customer and **COUNT** to count the number of items.  Crucially, these were results were joined with the members table using **JOIN** so that I could filter them to show only results before the join date of members.  
+
+| customer_id | total_spent | total_items |
+| ----------- | ---------- |----------  |
+| A           | 25 |  2       |
+| B           | 40 |  3       |
+
+````
+SELECT 
+	sales.customer_id, SUM(menu.price) AS total_spent, 
+	COUNT (sales.product_id) AS total_items
+FROM 
+	dannys_diner.menu
+JOIN 
+	dannys_diner.sales ON (sales.product_id=menu.product_id)
+JOIN 
+	dannys_diner.members ON (sales.customer_id=members.customer_id)
+WHERE 
+	order_date < join_date 
+GROUP BY 
+	sales.customer_id
+ORDER BY 
+	sales.customer_id;
+````
+
 ## Conclusion 
 
