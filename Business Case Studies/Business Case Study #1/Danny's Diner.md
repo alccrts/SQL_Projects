@@ -162,9 +162,9 @@ LIMIT 1
 
 ***
 
-**5 Which item was the most popular for each customer?**
+**5. Which item was the most popular for each customer?**
 
-As I discovered on question 3, this question was best answered by creating a CTE with the DENSE RANK () function and then referencing that to find the most purchsed product among the users.  As we can see, Ramen was the most popular among all Customers.  However, Customer B equally enjoyed Sushi and Curry.  
+As I discovered on question 3, this question was best answered by creating a CTE with the **DENSE RANK ()** function and then referencing that to find the most purchsed product among the users.  As we can see, Ramen was the most popular among all Customers.  However, Customer B equally enjoyed Sushi and Curry.  
 
 | customer_id | product_name | order_count | rank
 | ----------- | ---------- |------------  |------------  |
@@ -197,6 +197,35 @@ SELECT
 FROM most_popular 
 WHERE rank = 1;
 ````
+
+***
+
+## 6. Which item was purchased first by the customer after they became a member?
+
+The question asks what customers bought after they become a member, but they data we have .  It is possible a customer became a member on the same day they made an order.  Given that we don't have a more finite 'time' data, we cannot be sure whether the customer became a member first or placed their order first.  To answer this question, I have made the assumption that if a customer placed an order on the same day they become a member, then they became a member first before placing the order.  This seems the most likely scenario, given that being a member comes with promotions that might affect their order.  However, it would be sensible to confirm this with Danny.  
+
+Based on the above assumption, I created a CTE table which includes only orders placed by a customer on or after the join date of that customer. I then used **DENSE_RANK()** to organise that data, followed by a **SELECT** statement to query that table to pull the first result or after the members join date.  
+
+| customer_id | product_name |
+| ----------- | ---------- |
+| A           | curry        |
+| B           | sushi        |
+
+````
+WITH members_orders AS (
+SELECT 
+  DENSE_RANK() OVER
+  (PARTITION BY sales.customer_id ORDER BY sales.order_date ASC) AS rank, sales.customer_id, menu.product_name, sales.order_date
+FROM
+	dannys_diner.menu JOIN dannys_diner.sales ON (sales.product_id=menu.product_id) JOIN dannys_diner.members ON (sales.customer_id=members.customer_id)
+WHERE order_date >= join_date 
+  )
+  
+SELECT* FROM members_orders
+WHERE rank = 1
+````
+
+
 
 ## Conclusion 
 
