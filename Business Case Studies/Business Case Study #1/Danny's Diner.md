@@ -24,7 +24,6 @@ Danny has provided three datasets: `sales`, `menu`, `members` in the `dannys_dat
 
 To approach this question, I used the **JOIN** operator to combine two data sets on the shared key 'product_id'.  I then used the aggregate function **SUM** and **GROUP BY** to calculate the total amount spent by each customer, along with the **ORDER BY** function to sort the results from highest amount spend to lowest to easily see which customer spent the most.
 
-#### Answer:
 | customer_id | total_sales |
 | ----------- | ----------- |
 | A           | 76          |
@@ -49,7 +48,6 @@ Here, I used **COUNT** with **DISTINCT** to total the number of days each custom
 
 It's interesting to see that Customer A spent more than Customer B, even though Customer B made more visits to the store.  Customer A is therefore a relatively high-spending customer. 😃
 
-#### Answer:
 | customer_id | visit_count |
 | ----------- | ----------- |
 | B           | 6          |
@@ -72,7 +70,6 @@ ORDER BY
 
 My first attempt at this answer used embedded **SELECT** statements to filter the **MIN** order date for each customer.  This returned the correct results, but I then realised it would be impossible to use embedded select statements if there were a larger number of customers.  I therefore researched an alternative answer using the **DENSE RANK()** function.  I have included both SQL queries below.  There were two results for Customer A, meaning he ordered two products at the same time for his first order.
 
-#### Answer:
 | customer_id | product_name | 
 | ----------- | ----------- |
 | A           | curry        | 
@@ -147,4 +144,59 @@ GROUP BY customer_id, product_name;
 
 ***
 
+**4. What is the most purchased item on the menu and how many times was it purchased by all customers?**
+
+This was a nice and easy query to build using **COUNT** to total the number of times a product was ordered.  Ramen was the product ordered the most! 
+
+````
+SELECT 
+	menu.product_name, COUNT(product_name) AS order_quantity
+FROM 
+	dannys_diner.menu JOIN dannys_diner.sales ON (sales.product_id=menu.product_id)
+GROUP BY 
+	product_name 
+ORDER BY 
+	order_quantity DESC
+LIMIT 1
+````
+
+***
+
+**5 Which item was the most popular for each customer?**
+
+As I discovered on question 3, this question was best answered by creating a CTE with the DENSE RANK () function and then referencing that to find the most purchsed product among the users.  As we can see, Ramen was the most popular among all Customers.  However, Customer B equally enjoyed Sushi and Curry.  
+
+| customer_id | product_name | order_count | rank
+| ----------- | ---------- |------------  |------------  |
+| A           | ramen        |  3   |  1   |
+| B           | sushi        |  2   |  1   |
+| B           | curry        |  2   |  1   |
+| B           | ramen        |  2   |  1   |
+| C           | ramen        |  3   |  1   |
+
+````
+WITH most_popular AS (
+  SELECT 
+    sales.customer_id, 
+    menu.product_name, 
+    COUNT(menu.product_id) AS order_count,
+    DENSE_RANK() OVER (
+      PARTITION BY sales.customer_id 
+      ORDER BY COUNT(menu.product_id) DESC) AS rank
+  FROM dannys_diner.menu
+  INNER JOIN dannys_diner.sales
+    ON menu.product_id = sales.product_id
+  GROUP BY sales.customer_id, menu.product_name
+)
+
+SELECT 
+  customer_id, 
+  product_name, 
+  order_count,
+  rank
+FROM most_popular 
+WHERE rank = 1;
+````
+
 ## Conclusion 
+
