@@ -227,7 +227,30 @@ SELECT* FROM members_orders
 WHERE rank = 1
 ````
 
+## 7. Which item was purchased just before the customer became a member?
 
+As discussed in Question 6, to answer this question I have assumed we are searching for orders placed on dates before the customer became a member.  I have therefore employed the same query as above but have inverted the boolean operator to return only orders before the join date in the CTE table.  I also inverted the sorting from **ASC** to **DESC**.  Customer A ordered two products just before they became a member, Sushi and Curry, whereas Customer B purchased only Sushi.  
+
+|  rank  | customer_id | product_name |  order_date  |
+|------| ----------- | ---------- | ---------- |
+|  1  | A           | sushi        |  2021-01-01T00:00:00.000Z  | 
+|  1  | A           | curry        |  2021-01-01T00:00:00.000Z  |
+|  1  | B           | sushi        |  2021-01-04T00:00:00.000Z  |
+
+````
+WITH members_orders AS (
+SELECT 
+  DENSE_RANK() OVER
+  (PARTITION BY sales.customer_id ORDER BY sales.order_date DESC) AS rank, sales.customer_id, menu.product_name, sales.order_date
+FROM dannys_diner.menu
+JOIN dannys_diner.sales ON (sales.product_id=menu.product_id)
+JOIN dannys_diner.members ON (sales.customer_id=members.customer_id)
+WHERE order_date < join_date 
+  )
+  
+SELECT* FROM members_orders
+WHERE rank = 1
+````
 
 ## Conclusion 
 
