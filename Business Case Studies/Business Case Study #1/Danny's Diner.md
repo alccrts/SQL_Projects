@@ -2,7 +2,7 @@
 
 ## 📃 Contents
 - [Business Problem](#business-problem)
-- [Entity Relationship Diagram](#Data)
+- [Data](#Data)
 - [Questions & Analysis](#question-&-analysis)
 - [Conculsion](#conclusion)
 
