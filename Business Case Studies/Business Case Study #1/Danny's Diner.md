@@ -206,18 +206,19 @@ The question asks what customers bought after they become a member, but they dat
 
 Based on the above assumption, I created a CTE table which includes only orders placed by a customer on or after the join date of that customer. I then used **DENSE_RANK()** to organise that data, followed by a **SELECT** statement to query that table to pull the first result or after the members join date.  
 
-| customer_id | product_name |
-| ----------- | ---------- |
-| A           | curry        |
-| B           | sushi        |
+|  rank  | customer_id | product_name |  order_date  |
+|------| ----------- | ---------- | ---------- |
+|  1  | A           | curry        |  2021-01-07T00:00:00.000Z  | 
+|  1  | B           | sushi        |  2021-01-11T00:00:00.000Z  |
 
 ````
 WITH members_orders AS (
 SELECT 
   DENSE_RANK() OVER
   (PARTITION BY sales.customer_id ORDER BY sales.order_date ASC) AS rank, sales.customer_id, menu.product_name, sales.order_date
-FROM
-	dannys_diner.menu JOIN dannys_diner.sales ON (sales.product_id=menu.product_id) JOIN dannys_diner.members ON (sales.customer_id=members.customer_id)
+FROM dannys_diner.menu
+JOIN dannys_diner.sales ON (sales.product_id=menu.product_id)
+JOIN dannys_diner.members ON (sales.customer_id=members.customer_id)
 WHERE order_date >= join_date 
   )
   
