@@ -254,17 +254,36 @@ WHERE rank = 1
 
 ## 8. What is the total items and amount spent for each member before they became a member?
 
-Here I used **SUM** to total the amount spent by each customer and **COUNT** to count the number of items.  Crucially, these were results were joined with the members table using **JOIN** so that I could filter them to show only results before the join date of members.  
+Here I used **SUM** to total the amount spent by each customer and **COUNT** to count the number of items.  Crucially, these were results were joined with the members table using **JOIN** so that I could filter them to show only results before the join date of members.  I then repeated this query 
 
-| customer_id | total_spent | total_items |
-| ----------- | ---------- |----------  |
-| A           | 25 |  2       |
-| B           | 40 |  3       |
+| customer_id | total_spent_before | total_items_before | total_spent_after | total_items_after |
+| ----------- | ------------------ | ------------------ | ----------------- | ----------------- |
+| A           | 25                 | 2                  | 51                | 4                 |
+| B           | 40                 | 3                  | 34                | 3                 |
 
 ````
+WITH after AS (
+
 SELECT 
-	sales.customer_id, SUM(menu.price) AS total_spent, 
-	COUNT (sales.product_id) AS total_items
+	sales.customer_id, SUM(menu.price) AS total_spent_after, 
+	COUNT (sales.product_id) AS total_items_after
+FROM 
+	dannys_diner.menu
+JOIN 
+	dannys_diner.sales ON (sales.product_id=menu.product_id)
+JOIN 
+	dannys_diner.members ON (sales.customer_id=members.customer_id)
+WHERE 
+	order_date >= join_date 
+GROUP BY 
+	sales.customer_id
+ORDER BY 
+	sales.customer_id
+), before AS (
+
+SELECT 
+	sales.customer_id, SUM(menu.price) AS total_spent_before, 
+	COUNT (sales.product_id) AS total_items_before
 FROM 
 	dannys_diner.menu
 JOIN 
@@ -276,8 +295,12 @@ WHERE
 GROUP BY 
 	sales.customer_id
 ORDER BY 
-	sales.customer_id;
+	sales.customer_id
+)
+
+SELECT before.customer_id, total_spent_before, total_items_before, total_spent_after, total_items_after
+FROM before JOIN after ON (before.customer_id=after.customer_id)
+
 ````
 
 ## Conclusion 
-
