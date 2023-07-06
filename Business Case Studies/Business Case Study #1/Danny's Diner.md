@@ -6,7 +6,7 @@ This case study comes from the [#8weeksqlchallenge](https://8weeksqlchallenge.co
 ## 📃 Contents
 - [Business Problem](#business-problem)
 - [Data](#data)
-- [Questions & Analysis](#question-&-analysis)
+- [Questions & Analysis](#questions--analysis)
 - [Conculsion](#conclusion)
 
 ## Business Problem
@@ -381,7 +381,7 @@ The goal here was to identify all the orders that fall within the promotional pe
     	order_points 
     GROUP BY 
     	customer_id;
-```
+````
 ***
 
 
