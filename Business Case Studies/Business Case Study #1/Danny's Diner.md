@@ -254,7 +254,7 @@ WHERE rank = 1
 
 **8. What is the total items and amount spent for each member before they became a member?**
 
-Here I used **SUM** to total the amount spent by each customer and **COUNT** to count the number of items.  These were results were joined with the members table using **JOIN** so that I could filter them to show only results before the join date of members.  I then repeated this query but filtered the results to include only results following the join date of members.  This way I could compare Customer spending before and after their membership to see if the membership was encouraging them to pay more.  In the results below we can see that Customer A began to spend more after he became a member, whereas Customer B spend a little bit less.  We are therefore unable to say for certain if membership encourages customers to pay more.   
+Here I used **SUM** to total the amount spent by each customer and **COUNT** to count the number of items.  These were results were joined with the members table using **JOIN** so that I could filter them to show only results before the join date of members.  I then repeated this query but filtered the results to include only results following the join date of members.  This way I could compare Customer spending before and after their membership to see if the membership was encouraging them to pay more.  In the results below we can see that Customer A began to spend more after he became a member, whereas Customer B spend a little bit less but the amount of itmes they bought did not increase.  We are therefore unable to say for certain if membership encourages customers to pay more.   
 
 | customer_id | total_spent_before | total_items_before | total_spent_after | total_items_after |
 | ----------- | ------------------ | ------------------ | ----------------- | ----------------- |
@@ -329,6 +329,66 @@ ORDER BY
 
 
 
-## 10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
+**10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?**
+**Schema (PostgreSQL v13)**
+
+The goal here was to identify all the orders that fall within the promotional period and then calculate the amount of points each customer received during that period.  I then calculated the amount of points the customers would have recevied following the promotional period, up until the end of January.  This invovled the creation of two CTE tables, which I joined together using the **UNION ALL** operator to create a table with all points.  I could then use **SUM** and **GROUP BY** to total the points for each customer.  
+
+| customer_id | total_points  |
+| ----------- | ---- |
+| A           | 1020 |
+| B           | 320  |
+
+````
+    WITH order_points AS (
+    WITH promo_orders AS (
+    SELECT 
+      sales.customer_id, price*20 AS points 
+    FROM 
+      dannys_diner.menu
+    JOIN 
+      dannys_diner.sales ON (sales.product_id=menu.product_id)
+    JOIN 
+      dannys_diner.members ON (sales.customer_id=members.customer_id)
+    WHERE 
+      order_date <= (join_date+6) AND order_date >= join_date)
+    
+    , post_promo_orders AS (
+    SELECT 
+      sales.customer_id, price*10 AS points 
+    FROM 
+      dannys_diner.menu
+    JOIN 
+      dannys_diner.sales ON (sales.product_id=menu.product_id)
+    JOIN 
+      dannys_diner.members ON (sales.customer_id=members.customer_id)
+    WHERE 
+      order_date > (join_date+6) AND order_date < '2021-02-01'
+    )
+    
+    SELECT * 
+    FROM 
+      post_promo_orders 
+    UNION ALL 
+    SELECT * 
+    FROM promo_orders
+    )
+    
+    
+    SELECT
+    	customer_id, SUM(points) AS total_points
+    FROM 
+    	order_points 
+    GROUP BY 
+    	customer_id;
+```
+***
+
 
 ## Conclusion 
+
+After analysing the small data set from Danny’s Diner, we were able to identify the highest paying customers, their product preferences and spending habits.  
+
+In general, customers began tasting Sushi and Curry, but ultimately Ramen was the most purchased item, with all customers switching to Ramen towards their later visits to the restaurant.  The Ramen dish is clearly popular and this knowledge could be used to create a better experience to attract more members.  For example, Danny could also offer double points for purchasing Ramen.
+
+It was encouraging to see that Customers A and B continued their high spending behaviour after they had become members.  However, there was an absence of clear increase in spending following membership, which could suggest that the membership program is not doing enough to increase customer spending.  Danny could consider offering additional benefits if his goal is to increase customer spending. 
