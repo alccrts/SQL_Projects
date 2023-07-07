@@ -15,7 +15,7 @@ This case study is centered around a fictional online food store.  The founder o
 
 ## Data
 
-The founder has provided five datasets.  Customers who visit the Clique Bait website are tagged via their `cookie_id`. The data is somewhat limited because for privacy reasons, Danny provided only a sample of his overall customer data.  In addition, the data spans a limited date range due to Danny's business being new. I have analysed the data using PostgreSQL 13 on [DB Fiddle](https://www.db-fiddle.com/f/2rM8RAnq7h5LLDTzZiRWcd/138).  
+The founder has provided five datasets: `users`, `events`, `campaign_identifier`, `page_identifier`, `event_identifier`.  Customers who visit the Clique Bait website are tagged via their `cookie_id`. The data is somewhat limited because for privacy reasons, Danny provided only a sample of his overall customer data.  In addition, the data spans a limited date range due to Danny's business being new. I have analysed the data using PostgreSQL 13 on [DB Fiddle](https://www.db-fiddle.com/f/2rM8RAnq7h5LLDTzZiRWcd/138).  
 
 ![image](https://user-images.githubusercontent.com/81607668/127271130-dca9aedd-4ca9-4ed8-b6ec-1e1920dca4a8.png)
 
