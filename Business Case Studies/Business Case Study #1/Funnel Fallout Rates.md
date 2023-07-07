@@ -61,11 +61,70 @@ I created a cte table to first count the number of cookies per users.  I then av
 
 
 ***
+
 **3. What is the unique number of visits by all users per month?**
+
+In order to group results by month, I used the **EXTRACT** operator to identify the month if each visit.  I then used a simple **COUNT** and **GROUP BY** operation to count the visit_ids per month.
+    
+````  
+    SELECT EXTRACT (MONTH FROM event_time) AS month, COUNT (DISTINCT visit_id) AS unique_visit_ids
+    FROM clique_bait.events
+    GROUP BY (month)
+    ORDER BY month;
+
+````
+
+| month | unique_visit_ids |
+| ----- | ----- |
+| 1     | 876   |
+| 2     | 1488  |
+| 3     | 916   |
+| 4     | 248   |
+| 5     | 36    |
+
 ***
+
 **4. What is the number of events for each event type?**
+
+This query used **COUNT** and **GROUP BY** to count the number of events for each event type. 
+
+````
+    SELECT event_type, COUNT (event_type) AS num_of_events
+    FROM clique_bait.events
+    GROUP BY event_type
+    ORDER BY event_type;
+
+````
+| event_type | num_of_events |
+| ---------- | ------------- |
+| 1          | 20928         |
+| 2          | 8451          |
+| 3          | 1777          |
+| 4          | 876           |
+| 5          | 702           |
+
+
 ***
 **5. What is the percentage of visits which have a purchase event?**
+
+Despite being a simple percentage calculation, I found this question quite tricky.  Everything I tried returned the result of zero.  After some research, I discovered that this was because the character type of my **SELECT** statments were coming out as intergers, but the result of my division was a decimal number.  I therefore used the **CASE** operator to change the character type to float.  I was then able to multiple this result by 100 to get a percentage number. 
+
+````
+    SELECT 
+    (CAST (COUNT(DISTINCT events.visit_id) AS FLOAT)
+     /
+    (SELECT CAST (COUNT(DISTINCT events.visit_id) AS FLOAT)
+    FROM clique_bait.events) ) *100
+    AS purchase_percentage
+    FROM clique_bait.events JOIN clique_bait.event_identifier ON (event_identifier.event_type=events.event_type)
+    WHERE event_identifier.event_name = 'Purchase';
+
+````
+| purchase_percentage |
+| ------------------- |
+| 49.85970819304153   |
+
+
 ***
 **6. What is the percentage of visits which view the checkout page but do not have a purchase event?**
 ***
