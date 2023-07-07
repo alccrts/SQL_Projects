@@ -111,11 +111,9 @@ Despite being a simple percentage calculation, I found this question quite trick
 
 ````
     SELECT 
-    (CAST (COUNT(DISTINCT events.visit_id) AS FLOAT)
+ 	   (CAST (COUNT(DISTINCT events.visit_id) AS FLOAT)
      /
-    (SELECT CAST (COUNT(DISTINCT events.visit_id) AS FLOAT)
-    FROM clique_bait.events) ) *100
-    AS purchase_percentage
+  	  (SELECT CAST (COUNT(DISTINCT events.visit_id) AS FLOAT) FROM clique_bait.events) ) *100 AS purchase_percentage
     FROM clique_bait.events JOIN clique_bait.event_identifier ON (event_identifier.event_type=events.event_type)
     WHERE event_identifier.event_name = 'Purchase';
 
