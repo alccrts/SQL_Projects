@@ -15,7 +15,7 @@ This case study is centered around a fictional online food store.  The founder o
 
 ## Data
 
-The founder has provided five datasets: `users`, `events`, `campaign_identifier`, `page_identifier`, `event_identifier`.  Customers who visit the Clique Bait website are tagged via their `cookie_id`.  To demonstrate the relationship between the tables, I created the Entity Relationship Diagram below using the [DB Diagram tool](https://dbdiagram.io/home).  
+The founder has provided five datasets: `users`, `events`, `campaign_identifier`, `page_identifier`, `event_identifier`.  To demonstrate the relationship between the tables, I have created the Entity Relationship Diagram below using the [DB Diagram tool](https://dbdiagram.io/home).  
 
 ![image](https://github.com/alccrts/SQL_Projects/assets/138128361/5dca56a1-7afc-4df6-a786-271916719e8b)
 
