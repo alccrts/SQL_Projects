@@ -30,7 +30,7 @@ To approach this question, I used the **JOIN** operator to combine two data sets
 | A           | 76          |
 | B           | 74          |
 | C           | 36          |
-````
+```sql
 SELECT
   sales.customer_id, SUM (menu.price) AS total_spent
 FROM
@@ -39,7 +39,7 @@ GROUP BY
   sales.customer_id
 ORDER BY
   total_spent DESC
-````
+```
 
 ***
 
@@ -54,7 +54,7 @@ It's interesting to see that Customer A spent more than Customer B, even though 
 | B           | 6          |
 | A           | 4          |
 | C           | 2          |
-````
+```sql
 SELECT
   sales.customer_id, COUNT (DISTINCT sales.order_date) AS total_days
 FROM
@@ -63,7 +63,7 @@ GROUP BY
   sales.customer_id
 ORDER BY
   total_days DESC
-````
+```
 
 ***
 
@@ -78,7 +78,7 @@ My first attempt at this answer used embedded **SELECT** statements to filter th
 | B           | curry        | 
 | C           | ramen        |
 
-````
+```sql
 **1st Attempt**
 
 SELECT
@@ -140,7 +140,7 @@ FROM
 WHERE order_rank = 1
 GROUP BY customer_id, product_name;
 
-````                          
+```                          
 
 
 ***
@@ -149,7 +149,7 @@ GROUP BY customer_id, product_name;
 
 This was a nice and easy query to build using **COUNT** to total the number of times a product was ordered.  Ramen was the product ordered the most! 
 
-````
+```sql
 SELECT 
 	menu.product_name, COUNT(product_name) AS order_quantity
 FROM 
@@ -159,7 +159,7 @@ GROUP BY
 ORDER BY 
 	order_quantity DESC
 LIMIT 1
-````
+```
 
 ***
 
@@ -175,7 +175,7 @@ As I discovered on question 3, this question was best answered by creating a CTE
 | B           | ramen        |  2   |  1   |
 | C           | ramen        |  3   |  1   |
 
-````
+```sql
 WITH most_popular AS (
   SELECT 
     sales.customer_id, 
@@ -197,7 +197,7 @@ SELECT
   rank
 FROM most_popular 
 WHERE rank = 1;
-````
+```
 
 ***
 
@@ -212,7 +212,7 @@ Based on the above assumption, I created a CTE table which includes only orders 
 |  1  | A           | curry        |  2021-01-07T00:00:00.000Z  | 
 |  1  | B           | sushi        |  2021-01-11T00:00:00.000Z  |
 
-````
+```sql
 WITH members_orders AS (
 SELECT 
   DENSE_RANK() OVER
@@ -225,7 +225,7 @@ WHERE order_date >= join_date
   
 SELECT* FROM members_orders
 WHERE rank = 1
-````
+```
 
 **7. Which item was purchased just before the customer became a member?**
 
@@ -237,7 +237,7 @@ As discussed in Question 6, to answer this question I have assumed we are search
 |  1  | A           | curry        |  2021-01-01T00:00:00.000Z  |
 |  1  | B           | sushi        |  2021-01-04T00:00:00.000Z  |
 
-````
+```sql
 WITH members_orders AS (
 SELECT 
   DENSE_RANK() OVER
@@ -250,7 +250,7 @@ WHERE order_date < join_date
   
 SELECT* FROM members_orders
 WHERE rank = 1
-````
+```
 
 **8. What is the total items and amount spent for each member before they became a member?**
 
@@ -261,7 +261,7 @@ Here I used **SUM** to total the amount spent by each customer and **COUNT** to 
 | A           | 25                 | 2                  | 51                | 4                 |
 | B           | 40                 | 3                  | 34                | 3                 |
 
-````
+```sql
 WITH after AS (
 
 SELECT 
@@ -301,7 +301,7 @@ ORDER BY
 SELECT before.customer_id, total_spent_before, total_items_before, total_spent_after, total_items_after
 FROM before JOIN after ON (before.customer_id=after.customer_id)
 
-````
+```
 
 **9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?**
 
@@ -313,6 +313,7 @@ To calcuate the points each customer has, I used the **CASE** operator to multip
 | B           | 940    |
 | C           | 360    |
 
+```sql
 SELECT 
 	sales.customer_id, SUM(CASE (menu.product_id)
 	WHEN 1 THEN 20*price
@@ -326,7 +327,7 @@ GROUP BY
 	sales.customer_id
 ORDER BY
 	customer_id;
-
+```
 
 
 **10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?**
@@ -339,7 +340,7 @@ The goal here was to identify all the orders that fall within the promotional pe
 | A           | 1020 |
 | B           | 320  |
 
-````
+```sql
     WITH order_points AS (
     WITH promo_orders AS (
     SELECT 
@@ -380,8 +381,8 @@ The goal here was to identify all the orders that fall within the promotional pe
     FROM 
     	order_points 
     GROUP BY 
-    	customer_id;
-````
+	customer_id;
+```
 ***
 
 
