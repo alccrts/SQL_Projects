@@ -87,12 +87,27 @@ ALTER TABLE `polar-fulcrum-392507.met_art_data.met_art_data`
 RENAME COLUMN object_number TO object_code
 ```
 
-* I also noticed that `AccessionYear` is recorded as an INTERGER type rather than the YEAR data type.  However, after researching, I discovered BigQuery doesn't support the data type YEAR.  It only supports DATETIME, which is not suitable here. 
+* I also noticed that `AccessionYear` is recorded as an INTERGER type rather than the YEAR.  After searching online, I learnt BigQuery doesn't support the data type YEAR.  It only supports DATETIME, which is not suitable here. I therefore made no changes to this column.  
 
-Change Object_NUmber to object code.  
+**Formatting Categories**
+
+My next task was to check that all the categorical fields had consistent entries and that labelling errors had not created any inconsistencies.  I reviewed the different categories for `department` with the query below.  The results showed 19 unique departments with no labelling errors.  I also searched for NULL values for `department` - there weren't any. 
+
+``sql 
+SELECT DISTINCT department
+FROM `polar-fulcrum-392507.met_art_data.met_art_data`; 
+
+SELECT * 
+FROM `polar-fulcrum-392507.met_art_data.met_art_data` 
+WHERE department IS NULL 
+```
+
+![image](https://github.com/alccrts/SQL_Projects/assets/138128361/c5125e63-047a-41af-825c-28f740256db5)
+
+
+ 
 Medium - seperate different mediums into medium 1, 2 , 3
 check for nulls in all columns and decide what to do. 
-change accession to YEAR, but big query doesn't support YEAR type, so leave it as INT.
 Select 'distinct' department to make sure there are no duplicate departments 
 Select 'distinct' object_name to see if there are similar / duplicate object names. 
 Does object_name describe well the attribute
