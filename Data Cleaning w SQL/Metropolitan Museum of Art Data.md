@@ -93,7 +93,7 @@ RENAME COLUMN object_number TO object_code
 
 My next task was to check that all the categorical fields had consistent entries and that labelling errors had not created any inconsistencies.  I reviewed the different categories for `department` with the query below.  The results showed 19 unique departments with no labelling errors.  I also searched for NULL values for `department` - there weren't any. 
 
-``sql 
+```sql 
 SELECT DISTINCT department
 FROM `polar-fulcrum-392507.met_art_data.met_art_data`; 
 
@@ -104,23 +104,191 @@ WHERE department IS NULL
 
 ![image](https://github.com/alccrts/SQL_Projects/assets/138128361/c5125e63-047a-41af-825c-28f740256db5)
 
+I repeated this for the `object_name` column.  The results showed similar categories such as 'Platter' and 'Meat Platter' and 'Shoe Buckle' and 'Buckle'.  If possible, I would consults with the owner of the dataset to confirm whether or not the distinction between these categories were important.  For the sake of this project, I have decided they are not important to so I have changed combined the similar categories using the following query.
 
- 
-Medium - seperate different mediums into medium 1, 2 , 3
-check for nulls in all columns and decide what to do. 
-Select 'distinct' department to make sure there are no duplicate departments 
-Select 'distinct' object_name to see if there are similar / duplicate object names. 
-Does object_name describe well the attribute
-Object name = object title 
-culture - null should go to 'culture unknown' 
-change some of the categories of culture - e.g native american: xxx
-check then drop null columns 
-no medium available - what to do?
-replace N/A with NULL 
-standardise upper / lower case.
-TRIM unnecessary white space
-decide what to do with missing data > won't delete records with missing data because missing data wouldn't affect our analysis and also it's not worth the loss of info.  
-sort the columns like accessionyear to look for outliers. 
+```sql
+
+UPDATE `polar-fulcrum-392507.met_art_data.met_art_data`
+SET object_name = 'Buckle'
+WHERE object_name = 'Shoe buckle' ; 
+
+UPDATE `polar-fulcrum-392507.met_art_data.met_art_data`
+SET object_name = 'Platter'
+WHERE object_name = 'Meat platter'
+```
+
+For tidiness, I converted all `object_name` to title case with the following query.
+
+```sql
+UPDATE `polar-fulcrum-392507.met_art_data.met_art_data`
+SET object_name = INITCAP(object_name)
+WHERE object_name IS NOT NULL
+```
+
+Cleaning the field `Country` was the most complex task throughout this cleaning process.  There were over 950 distinct values for Country.  There were several complications such as multiple variations of the same country, spelling mistakes, countries broken down into regions, city names instead of countries, multiple countries included in the same field, with different types of delimiters used.  It took several hours to clean the list.  Here is a summary of some of the SQL steps taken:
+
+```sql
+UPDATE `polar-fulcrum-392507.met_art_data.met_art_data` -- standaradise variations of United States to USA.  
+SET Country = 'USA'
+WHERE Country = 'United States' OR  Country = 'United States|United States' OR Country ='United States|United States|United States' OR Country = 'U.S.A.' OR Country ='United States of America' OR Country = 'United States ()' OR Country = 'United States()' OR Country = 'US'
+
+UPDATE `polar-fulcrum-392507.met_art_data.met_art_data` -- standaradise variations of UK.
+SET Country = 'UK'
+WHERE Country = 'United Kingdom' OR  Country = 'United Kingdom '
+
+UPDATE `polar-fulcrum-392507.met_art_data.met_art_data` -- standardise | delimiters to only commas
+SET Country = REPLACE(Country, '|', ',')
+WHERE Country LIKE '%|%' OR Country LIKE '%|'
+
+UPDATE `polar-fulcrum-392507.met_art_data.met_art_data` -- standardise 'or' delimiter to only commmas
+SET Country = REPLACE(Country, 'or', ',')
+WHERE Country LIKE '%or%'
+
+UPDATE `polar-fulcrum-392507.met_art_data.met_art_data` -- remove probably
+SET Country = REPLACE(Country, 'probably', '')
+WHERE Country IS NOT NULL
+
+UPDATE `polar-fulcrum-392507.met_art_data.met_art_data` -- remove possibly
+SET Country = REPLACE(Country, 'possibly', '')
+WHERE Country IS NOT NULL
+
+UPDATE `polar-fulcrum-392507.met_art_data.met_art_data` -- replace Ecaud with Ecuador
+SET Country = REPLACE(Country, 'Ecuad', 'Ecuador')
+WHERE Country IS NOT NULL
+
+UPDATE `polar-fulcrum-392507.met_art_data.met_art_data` -- remove present-day
+SET Country = REPLACE(Country, 'present-day', ' ')
+WHERE Country IS NOT NULL
+
+UPDATE `polar-fulcrum-392507.met_art_data.met_art_data` --  remove formerly
+SET Country = REPLACE(Country, "f'merly", ' ')
+WHERE Country IS NOT NULL
+
+UPDATE `polar-fulcrum-392507.met_art_data.countries` -- remove country variations
+SET Country1 = REPLACE(Country1, 'South France', "France")
+WHERE Country1 IS NOT NULL;
+
+CREATE TABLE `polar-fulcrum-392507.met_art_data.countries` -- once all delimiters were changed to a comma, i could then seperate multiple columns into multiple countries in a seperate table
+AS 
+select
+split(Country, ',')[safe_offset(0)] as country1, 
+split(Country, ',')[safe_offset(1)] as country2, 
+split(Country, ',')[safe_offset(2)] as country3, 
+split(Country, ',')[safe_offset(3)] as country4
+FROM `polar-fulcrum-392507.met_art_data.met_art_data-2023-07-12T14_00_02_restore`
+
+UPDATE `polar-fulcrum-392507.met_art_data.countries` -- Trim white space
+SET Country1 = Trim(Country1)
+WHERE Country1 IS NOT NULL;
+```
+
+
+**Dropping Columns** 
+
+Many of the columns were not necessary to my analysis so I decided to drop them from the table.  These fields also contained no data so I was confident with the decision to drop them. 
+
+```sql
+ALTER TABLE `polar-fulcrum-392507.met_art_data.met_art_data`
+DROP COLUMN Portfolio, 
+DROP COLUMN Artist_RolE,
+DROP COLUMN Constituent_ID, 
+DROP COLUMN Artist_Display_Name, 
+DROP COLUMN Artist_Display_Bio,
+DROP COLUMN Artist_Suffix, 
+DROP COLUMN Artist_Nationality,
+DROP COLUMN Artist_Begin_Date,
+DROP COLUMN Artist_End_Date,
+DROP COLUMN Artist_Gender,
+DROP COLUMN Artist_ULAN_URL,
+DROP COLUMN Artist_Wikidata_URL,
+DROP COLUMN Artist_Prefix,
+DROP COLUMN Artist_Alpha_Sort,
+DROP COLUMN Tags_Wikidata_URL, 
+DROP COLUMN Tags_AAT_URL,
+DROP COLUMN Tags, 
+DROP COLUMN Metadata_Date, 
+DROP COLUMN Rights_and_Reproduction,
+DROP COLUMN Classification,
+DROP COLUMN Region
+```
+
+There were several fields that could be relevant to my analysis but I noticed that most of the data was NULL.  I ran the below query to calculate the percentage of NULL values in these columns.  Given that so many were values were null (50 - 95%), I decided to drop these columns as well because they would not tell me much about the overall collection. 
+
+```sql
+SELECT 
+
+ROUND(100*( SUM (CASE WHEN Period IS NULL then 1 else 0 end)/ COUNT(*)),0) AS period_nulls,
+
+ROUND(100*( SUM (CASE WHEN Culture IS NULL then 1 else 0 end)/ COUNT(*)),0) AS culture_nulls,
+
+ROUND(100*( SUM (CASE WHEN Dynasty IS NULL then 1 else 0 end)/ COUNT(*)),0) AS dynasty_nulls,
+
+ROUND(100*( SUM (CASE WHEN Region IS NULL then 1 else 0 end)/ COUNT(*)),0) AS region_nulls,
+
+FROM `polar-fulcrum-392507.met_art_data.met_art_data`
+```
+
+![image](https://github.com/alccrts/SQL_Projects/assets/138128361/d166473f-6459-4966-aa47-df484bf73c52)
+
+
+```sql
+ALTER TABLE `polar-fulcrum-392507.met_art_data.met_art_data`
+DROP COLUMN Period, 
+DROP COLUMN Culture,
+DROP COLUMN Dynasty, 
+DROP COLUMN Region;
+```
+
+**Looking for outliers** 
+
+I decided to check for outliers in column `AccessionYear` by ordering the columns and showing the first and last 50 results.  The earliest accesstion year was 1870.  This was when the museum was founded and so would not be an outlier.  The latest accession was in 2023, which is also unlikely to be an outlier.  
+
+```sql
+SELECT * FROM `polar-fulcrum-392507.met_art_data.met_art_data`
+WHERE AccessionYear IS NOT NULL
+ORDER BY AccessionYear ASC
+LIMIT 50 ;
+
+SELECT * FROM `polar-fulcrum-392507.met_art_data.met_art_data`
+ORDER BY AccessionYear DESC
+LIMIT 50 
+```
+
+**Missing Data**
+
+I have already dropped several columns with missing data because those columns were not relevant to my upcoming analysis.  However, there is still missing data in columns which are relevant to my analysis such as `AccessionYear`.  I have calculated the percentage of nulls in `AccessionYear` with the query below.  Less than 1% of the records didn't have an entry for `AccessionYear`, as this was such a small amount, I decided to delete these records. 3,837 results were deleted.
+
+```sql
+SELECT 
+
+ROUND(100*( SUM (CASE WHEN AccessionYear IS NULL then 1 else 0 end)/ COUNT(*)),2) AS AccessionYear_nulls,
+
+FROM `polar-fulcrum-392507.met_art_data.met_art_data`
+```
+```sql
+DELETE FROM `polar-fulcrum-392507.met_art_data.met_art_data`
+WHERE AccessionYear IS NULL
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 What percentage of the works on in the public domain? 
