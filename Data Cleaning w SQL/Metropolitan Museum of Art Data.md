@@ -270,7 +270,7 @@ DELETE FROM `polar-fulcrum-392507.met_art_data.met_art_data`
 WHERE AccessionYear IS NULL
 ```
 
-
+At this point I was satisfied that the data was sufficiently clean for my purposes.  I joined 
 
 
 
