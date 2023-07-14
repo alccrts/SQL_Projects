@@ -270,7 +270,21 @@ DELETE FROM `polar-fulcrum-392507.met_art_data.met_art_data`
 WHERE AccessionYear IS NULL
 ```
 
-At this point I was satisfied that the data was sufficiently clean for my purposes.  I joined 
+At this point I was satisfied that the data was sufficiently clean for my purposes.  The final step I took was to merge another the column in a separte table that I had created to clean the countries list.  I then exported the data as a CSV file and uploaded it to Tablaeu. 
+
+```sql
+
+UPDATE `polar-fulcrum-392507.met_art_data.met_art_data-2023-07-12T14_00_02_restore`
+    SET new_countries = '(
+        SELECT country1
+        FROM `polar-fulcrum-392507.met_art_data.countries`
+        WHERE `polar-fulcrum-392507.met_art_data.countries`.country1 = `polar-fulcrum-392507.met_art_data.met_art_data-2023-07-12T14_00_02_restore`.new_countries
+    )
+WHERE new_countries IS NULL
+    ;
+```
+
+
 
 
 
