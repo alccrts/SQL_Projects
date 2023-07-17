@@ -66,7 +66,122 @@ FROM `acedata.acedata.acedata`) AS total_all_years
 ```
 </details>
 
-What was the top three disciplines?
+**Which are top three locations that receive the most funding each year?**
+![image](https://github.com/alccrts/SQL_Projects/assets/138128361/d6dbaa31-e0f8-4b8a-903b-21d4a56bb7a9)
+<details>
+<summary>View SQL Query</summary>
+<br>
+  
+```sql
+WITH  `acedata.acedata.top_locations19` AS(
+
+SELECT 
+  local_authority AS local_authority_2019,
+  DENSE_RANK() OVER (PARTITION BY year ORDER BY sum(award_amount) DESC ) AS RANK
+FROM `acedata.acedata.acedata`
+WHERE YEAR = 2019
+GROUP BY local_authority, year), 
+
+ `acedata.acedata.top_locations20` AS(
+
+SELECT 
+  local_authority AS local_authority_2020,
+  DENSE_RANK() OVER (PARTITION BY year ORDER BY sum(award_amount) DESC ) AS RANK
+FROM `acedata.acedata.acedata`
+WHERE YEAR = 2020
+GROUP BY local_authority, year), 
+
+ `acedata.acedata.top_locations21` AS(
+
+SELECT 
+  local_authority AS local_authority_2021,
+  DENSE_RANK() OVER (PARTITION BY year ORDER BY sum(award_amount) DESC ) AS RANK
+FROM `acedata.acedata.acedata`
+WHERE YEAR = 2021
+GROUP BY local_authority, year), 
+
+ `acedata.acedata.top_locations22` AS(
+
+SELECT 
+  local_authority AS local_authority_2022,
+  DENSE_RANK() OVER (PARTITION BY year ORDER BY sum(award_amount) DESC ) AS RANK
+FROM `acedata.acedata.acedata`
+WHERE YEAR = 2022
+GROUP BY local_authority, year), 
+
+ `acedata.acedata.top_locations23` AS(
+
+SELECT 
+  local_authority AS local_authority_2023,
+  DENSE_RANK() OVER (PARTITION BY year ORDER BY sum(award_amount) DESC ) AS RANK
+FROM `acedata.acedata.acedata`
+WHERE YEAR = 2023
+GROUP BY local_authority, year)
+
+
+SELECT a.local_authority_2019, b.local_authority_2020, c.local_authority_2021, d.local_authority_2022, e.local_authority_2023 from `acedata.acedata.top_locations19` AS a JOIN `acedata.acedata.top_locations20` AS b ON (a.rank=b.rank) JOIN `acedata.acedata.top_locations21` as c ON (c.rank=b.rank) JOIN `acedata.acedata.top_locations22` as d ON (c.rank=d.rank) JOIN `acedata.acedata.top_locations23` as e ON (e.rank=d.rank)
+WHERE a.rank < 4
+```
+</details>
+
+**Which are the top three disciplines that receive the most funding each year?**
+![image](https://github.com/alccrts/SQL_Projects/assets/138128361/50035312-8b1f-40a0-a17c-7c157695c83e)
+<details>
+<summary>View SQL Query</summary>
+<br>
+  
+```sql
+WITH  `acedata.acedata.top_disciplines19` AS(
+
+SELECT 
+  main_discipline AS top_dis_2019,
+  DENSE_RANK() OVER (PARTITION BY year ORDER BY sum(award_amount) DESC ) AS RANK
+FROM `acedata.acedata.acedata`
+WHERE YEAR = 2019
+GROUP BY main_discipline, year), 
+
+ `acedata.acedata.top_disciplines20` AS(
+
+SELECT 
+  main_discipline AS top_dis_2020,
+  DENSE_RANK() OVER (PARTITION BY year ORDER BY sum(award_amount) DESC ) AS RANK
+FROM `acedata.acedata.acedata`
+WHERE YEAR = 2020
+GROUP BY main_discipline, year), 
+
+ `acedata.acedata.top_disciplines21` AS(
+
+SELECT 
+  main_discipline AS top_dis_2021,
+  DENSE_RANK() OVER (PARTITION BY year ORDER BY sum(award_amount) DESC ) AS RANK
+FROM `acedata.acedata.acedata`
+WHERE YEAR = 2021
+GROUP BY main_discipline, year), 
+
+ `acedata.acedata.top_disciplines22` AS(
+
+SELECT 
+  main_discipline AS top_dis_2022,
+  DENSE_RANK() OVER (PARTITION BY year ORDER BY sum(award_amount) DESC ) AS RANK
+FROM `acedata.acedata.acedata`
+WHERE YEAR = 2022
+GROUP BY main_discipline, year), 
+
+ `acedata.acedata.top_disciplines23` AS(
+
+SELECT 
+  main_discipline AS top_dis_2023,
+  DENSE_RANK() OVER (PARTITION BY year ORDER BY sum(award_amount) DESC ) AS RANK
+FROM `acedata.acedata.acedata`
+WHERE YEAR = 2023
+GROUP BY main_discipline, year)
+
+
+SELECT a.top_dis_2019, b.top_dis_2020, c.top_dis_2021, d.top_dis_2022, e.top_dis_2023 from `acedata.acedata.top_disciplines19` AS a JOIN `acedata.acedata.top_disciplines20` AS b ON (a.rank=b.rank) JOIN `acedata.acedata.top_disciplines21` as c ON (c.rank=b.rank) JOIN `acedata.acedata.top_disciplines22` as d ON (c.rank=d.rank) JOIN `acedata.acedata.top_disciplines23` as e ON (e.rank=d.rank)
+WHERE a.rank < 4
+```
+</details>
+
 
 What was the top three activities that received the  most funding?
 
