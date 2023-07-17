@@ -287,12 +287,6 @@ WHERE a.rank < 2
 </details>
 
 
-What was the top three activities that received the  most funding?
-
-which local authority received the least?
-
-which region received the most funding? 
-
 which month of year pays out the most funding?  
 
 Which region had the most big budget awards over 100k. 
