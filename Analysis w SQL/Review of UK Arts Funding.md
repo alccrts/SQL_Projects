@@ -12,7 +12,7 @@ The data is published by the council - [you can find the data here](https://www.
 * combine the annual data of five years into a single CSV file 
 * removed currency formatting
 * changed all text to lower case
-* complete missing location data for records with missing data for location by researching the awarded projects online. 
+* complete missing location data by researching the awarded projects online. 
 * upload to BigQuery (preview below)
 
 ![image](https://github.com/alccrts/SQL_Projects/assets/138128361/039e7763-8ecf-43af-b698-9d8df64166c5)
