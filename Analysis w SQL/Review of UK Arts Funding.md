@@ -21,6 +21,7 @@ The data is published by the council - [you can find the data here](https://www.
 Below is a sample of the questions I devised in order to explore the data.  The SQL queries I wrote to generate answers can be viewed by clicking the drop down arrows.  
 
 **What was the total value of the grants distributed each year and across all five years?** 
+
 ![image](https://github.com/alccrts/SQL_Projects/assets/138128361/8019695c-c754-44c4-bf1b-03bd44cfcf64)
 <details>
 <summary>View SQL Query</summary>
@@ -66,7 +67,31 @@ FROM `acedata.acedata.acedata`) AS total_all_years
 ```
 </details>
 
-**Which are top three locations that receive the most funding each year?**
+
+**What is the average amount of funding each location received over the last five years?**
+
+![image](https://github.com/alccrts/SQL_Projects/assets/138128361/6592e0d1-3ec1-4a6e-b9e8-fe9e1872672c)
+<details>
+<summary>View SQL Query</summary>
+<br>
+  
+```sql
+WITH `acedata.acedata.sumaward` as (
+  
+  SELECT 
+    local_authority, 
+    SUM(award_amount) as t
+FROM `acedata.acedata.acedata` 
+GROUP BY local_authority
+ORDER BY t DESC)
+
+SELECT 
+  ROUND(AVG(t),0) AS average_funding FROM `acedata.acedata.sumaward`
+```
+</details>
+
+**Which are the top three locations that receive the most funding each year?**
+
 ![image](https://github.com/alccrts/SQL_Projects/assets/138128361/d6dbaa31-e0f8-4b8a-903b-21d4a56bb7a9)
 <details>
 <summary>View SQL Query</summary>
@@ -124,7 +149,9 @@ WHERE a.rank < 4
 ```
 </details>
 
+
 **Which are the top three disciplines that receive the most funding each year?**
+
 ![image](https://github.com/alccrts/SQL_Projects/assets/138128361/50035312-8b1f-40a0-a17c-7c157695c83e)
 <details>
 <summary>View SQL Query</summary>
@@ -179,6 +206,82 @@ GROUP BY main_discipline, year)
 
 SELECT a.top_dis_2019, b.top_dis_2020, c.top_dis_2021, d.top_dis_2022, e.top_dis_2023 from `acedata.acedata.top_disciplines19` AS a JOIN `acedata.acedata.top_disciplines20` AS b ON (a.rank=b.rank) JOIN `acedata.acedata.top_disciplines21` as c ON (c.rank=b.rank) JOIN `acedata.acedata.top_disciplines22` as d ON (c.rank=d.rank) JOIN `acedata.acedata.top_disciplines23` as e ON (e.rank=d.rank)
 WHERE a.rank < 4
+```
+</details>
+
+
+**Which are the activities that received the most funding during the time period?**
+
+![image](https://github.com/alccrts/SQL_Projects/assets/138128361/92e8db2d-fce6-4dab-ad55-10f5d631e5c4)
+<details>
+<summary>View SQL Query</summary>
+<br>
+  
+```sql
+SELECT activity_name, main_discipline, award_amount, year
+FROM `acedata.acedata.acedata`
+ORDER BY award_amount DESC
+LIMIT 5
+```
+</details>
+
+
+**Which area of Enland receives the least funding?**
+
+![image](https://github.com/alccrts/SQL_Projects/assets/138128361/432d15ef-dc9f-4094-9157-59fd5eb88a09)
+<details>
+<summary>View SQL Query</summary>
+<br>
+  
+```sql
+WITH  `acedata.acedate.area19` AS(
+
+SELECT 
+  ace_area AS area2019,
+  DENSE_RANK() OVER (PARTITION BY year ORDER BY sum(award_amount) ASC ) AS RANK
+FROM `acedata.acedata.acedata`
+WHERE YEAR = 2019
+GROUP BY  ace_area, year), 
+
+ `acedata.acedata.area20` AS(
+
+SELECT 
+  ace_area AS area2022,
+  DENSE_RANK() OVER (PARTITION BY year ORDER BY sum(award_amount) ASC ) AS RANK
+FROM `acedata.acedata.acedata`
+WHERE YEAR = 2020
+GROUP BY  ace_area, year), 
+
+ `acedata.acedata.area21` AS(
+
+SELECT 
+  ace_area AS area2021,
+  DENSE_RANK() OVER (PARTITION BY year ORDER BY sum(award_amount) ASC ) AS RANK
+FROM `acedata.acedata.acedata`
+WHERE YEAR = 2021
+GROUP BY  ace_area, year), 
+
+ `acedata.acedata.area22` AS(
+
+SELECT 
+  ace_area AS area2022,
+  DENSE_RANK() OVER (PARTITION BY year ORDER BY sum(award_amount) ASC ) AS RANK
+FROM `acedata.acedata.acedata`
+WHERE YEAR = 2022
+GROUP BY  ace_area, year), 
+
+ `acedata.acedata.area23` AS(
+
+SELECT 
+  ace_area AS area23,
+  DENSE_RANK() OVER (PARTITION BY year ORDER BY sum(award_amount) ASC ) AS RANK
+FROM `acedata.acedata.acedata`
+WHERE YEAR = 2023
+GROUP BY  ace_area, year)
+
+
+SELECT a.area2019, b.area2022, c.area2021, d.area2022, e.area23 from `acedata.acedate.area19` AS a JOIN `acedata.acedata.area20` AS b ON (a.rank=b.rank) JOIN `acedata.acedata.area21` as c ON (c.rank=b.rank) JOIN `acedata.acedata.area22` as d ON (c.rank=d.rank) JOIN `acedata.acedata.area23` as e ON (e.rank=d.rank)
+WHERE a.rank < 2
 ```
 </details>
 
