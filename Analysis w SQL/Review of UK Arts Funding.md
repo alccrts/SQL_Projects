@@ -1,6 +1,6 @@
 ## UK Arts Funding Analysis using SQL
 
-In this project, I have taken data from Arts Council England to review their sfunding patterns across five years.  I have used Excel, BigQuery, Tableau and Pitch to present my analysis.  
+In this project, I have taken data from Arts Council England to review their funding patterns across five years.  I have used Excel, BigQuery, Tableau and Pitch to present my analysis.  
 
 ![ArtsCouncil-2014070211374640](https://github.com/alccrts/SQL_Projects/assets/138128361/7bf3674b-c106-4c37-a7ca-c6f407c81554)
 
