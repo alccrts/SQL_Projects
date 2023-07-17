@@ -16,11 +16,79 @@ The data is published by the council - [you can find the data here](https://www.
 
 ![image](https://github.com/alccrts/SQL_Projects/assets/138128361/039e7763-8ecf-43af-b698-9d8df64166c5)
 
+### Exploring the Data
+
+Below is a sample of the questions I devised in order to explore the data.  The SQL queries I wrote to generate answers can be viewed by clicking the drop down arrows.  
+
+**What was the total value of the grants distributed each year and across all five years?** 
+![image](https://github.com/alccrts/SQL_Projects/assets/138128361/8019695c-c754-44c4-bf1b-03bd44cfcf64)
 <details>
 <summary>View SQL Query</summary>
 <br>
   
 ```sql
-  test
+SELECT 
+
+(
+  
+SELECT sum(award_amount) 
+FROM `acedata.acedata.acedata`
+WHERE year = 2019) AS total_2019 ,  
+
+(
+
+SELECT sum(award_amount) 
+FROM `acedata.acedata.acedata`
+WHERE year = 2020) AS total_2020, 
+
+(
+
+SELECT sum(award_amount) 
+FROM `acedata.acedata.acedata`
+WHERE year = 2021) AS total_2021, 
+
+(
+
+SELECT sum(award_amount) 
+FROM `acedata.acedata.acedata`
+WHERE year = 2022) AS total_2022, 
+
+(
+
+SELECT sum(award_amount) 
+FROM `acedata.acedata.acedata`
+WHERE year = 2023) AS total_2023, 
+
+(
+SELECT sum(award_amount) 
+FROM `acedata.acedata.acedata`) AS total_all_years
+
 ```
 </details>
+
+What was the top three disciplines?
+
+What was the top three activities that received the  most funding?
+
+which local authority received the least?
+
+which region received the most funding? 
+
+which month of year pays out the most funding?  
+
+Which region had the most big budget awards over 100k. 
+
+Which authority had the most small budget awards under 5k. 
+
+is the majority of funding given as smaller or larger amounts? 
+
+combine last years data > more or less or the same total funding?
+
+which region saw the biggest change in funding 22 - 23?
+
+which discipline saw change? 
+
+did any recepients receive an award 5 years in a row?  
+
+
+
