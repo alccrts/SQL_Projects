@@ -286,7 +286,9 @@ WHERE a.rank < 2
 ```
 </details>
 
-
+<details>
+<summary>To be continued</summary>
+<br>
 which month of year pays out the most funding?  
 
 Which region had the most big budget awards over 100k. 
@@ -303,5 +305,5 @@ which discipline saw change?
 
 did any recepients receive an award 5 years in a row?  
 
-
+</details>
 
