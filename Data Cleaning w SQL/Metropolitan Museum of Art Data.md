@@ -1,5 +1,5 @@
 ## Data Cleaning Practice
-In this project, I have taken a dataset from the Metropolitan Museum of Art in New York.  I have imported it into BigQuery to clean and analyse using SQL.  I have then created a visual using Tableau.  
+In this project, I have taken a dataset from the Metropolitan Museum of Art in New York.  I have imported it into BigQuery to clean and analyse using SQL.  
 
 ![GettyImages-1180468555-1024x683](https://github.com/alccrts/SQL_Projects/assets/138128361/8aa2c1de-6967-4d97-8d6f-abec6afe86b6)
 
