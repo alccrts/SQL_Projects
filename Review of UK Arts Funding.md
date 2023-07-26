@@ -34,7 +34,7 @@ The data is published by the council - [you can find the data here](https://www.
 
 ### Exploring the Data
 
-Below is a sample of the questions I devised in order to explore the data.  The SQL queries I wrote to generate answers can be viewed by clicking the drop down arrows.  
+Below is a sample of the questions I devised in order to explore the data.  
 
 **What was the total value of the grants distributed each year and across all five years?** 
 
