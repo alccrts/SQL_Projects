@@ -1,14 +1,25 @@
 ## UK Arts Funding Analysis using SQL
 
-In this project, I have taken data from Arts Council England to review their funding patterns across five years.  I have used Excel, BigQuery, Tableau and Pitch to present my analysis.  
+![Arts Funding Dashboard 2](https://github.com/alccrts/Data_Visualizations/assets/138128361/4a1099a3-13d3-48b8-8e56-b8fb62359923)
 
-![ArtsCouncil-2014070211374640](https://github.com/alccrts/SQL_Projects/assets/138128361/7bf3674b-c106-4c37-a7ca-c6f407c81554)
+In this project, I have taken data from Arts Council England to review their funding patterns across five years.  I have used Biq Query to explore the data and Excel to create a dashboard.
 
-The Arts Council England is UK's national development agency for creativity and culture.  The council distributes public money from the UK Government as well as grants funded by The National Lottery to support individual practitioners, communities and cultural organisations with projects that focus on Combined Arts including festivals and carnivals, Dance, Libraries, Literature, Museums, Music, Theatre or Visual Arts.  This analysis will review The National Lottery Grants given during 2018 - 2023.  You can view the [Arts Council Website](https://www.artscouncil.org.uk/ProjectGrants) for more information.   
+### Key Findings
+* Funding increased by over 30% from 2019 to 2023.
+* A 50% reduction in funding took place in the year following the pandemic.
+* There is a trend towards granting fewer awards of a higher amount, rather than a large quantity of small value awards.  The number of awards granted has decreased by approximately 25%, but the value of the awards has increased by over 50% from 2019 to 2023.
+* The London region consistently receives the highest proportion of funds, between 28% - 31%.
+* The artistic disciplines that recieve the highest proportion of the awards over the 5 years are Theatre, Combined Arts and Visual Arts.
+
+
+***
+
 
 ### Preparing the Data
 
-The data is published by the council - [you can find the data here](https://www.artscouncil.org.uk/research-and-data/our-data).   Preparing the data required little work, as it was already well processed by the council.  I could use Excel to make some small changes as the quantity of data was not too large (around 18,000 records).  My main tasks were:
+The Arts Council England is UK's national development agency for creativity and culture.  The council distributes grants funded by The National Lottery to support individual practitioners, communities and cultural organisations with projects that focus on Combined Arts including festivals and carnivals, Dance, Libraries, Literature, Museums, Music, Theatre or Visual Arts.  This analysis will review The National Lottery Grants given during 2018 - 2023.  You can view the [Arts Council Website](https://www.artscouncil.org.uk/ProjectGrants) for more information.   
+
+The data is published by the council - [you can find the data here](https://www.artscouncil.org.uk/research-and-data/our-data).   Preparing the data required little work, as it was already well processed by the council.  I could use Excel to make some small changes.  My main tasks were:
 * combine the annual data of five years into a single CSV file 
 * removed currency formatting
 * changed all text to lower case
@@ -16,6 +27,10 @@ The data is published by the council - [you can find the data here](https://www.
 * upload to BigQuery (preview below)
 
 ![image](https://github.com/alccrts/SQL_Projects/assets/138128361/039e7763-8ecf-43af-b698-9d8df64166c5)
+
+
+***
+
 
 ### Exploring the Data
 
@@ -286,24 +301,12 @@ WHERE a.rank < 2
 ```
 </details>
 
-<details>
-<summary>To be continued</summary>
-<br>
-which month of year pays out the most funding?  
 
-Which region had the most big budget awards over 100k. 
+***
 
-Which authority had the most small budget awards under 5k. 
 
-is the majority of funding given as smaller or larger amounts? 
+### Creating a Dashboard. 
 
-combine last years data > more or less or the same total funding?
+After exploring the data using SQL, I decided a dashboard would be a great way to present the data.  The final dashboard features various slicers which allows users to explore the data based on region, year and artistic discipline.  [You can view a preview of the dashboard here.](https://github.com/alccrts/Data_Visualizations/assets/138128361/4a1099a3-13d3-48b8-8e56-b8fb62359923)
 
-which region saw the biggest change in funding 22 - 23?
-
-which discipline saw change? 
-
-did any recepients receive an award 5 years in a row?  
-
-</details>
 
