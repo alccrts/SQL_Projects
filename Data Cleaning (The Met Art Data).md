@@ -270,7 +270,7 @@ DELETE FROM `polar-fulcrum-392507.met_art_data.met_art_data`
 WHERE AccessionYear IS NULL
 ```
 
-At this point I was satisfied that the data was sufficiently clean for my purposes.  The final step I took was to merge another the column in a separte table that I had created to clean the countries list.  I then exported the data as a CSV file and uploaded it to Tablaeu. 
+At this point I was satisfied that the data was sufficiently clean for my purposes.  The final step I took was to merge another the column in a separte table that I had created to clean the countries list.  I then exported the data as a CSV file, ready to be uploaded to Tablaeu or similar to analyse further. 
 
 ```sql
 
@@ -302,8 +302,4 @@ WHERE new_countries IS NULL
 
 
 
-
-
-
-What percentage of the works on in the public domain? 
 
