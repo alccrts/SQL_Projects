@@ -307,6 +307,6 @@ WHERE a.rank < 2
 
 ### Creating a Dashboard. 
 
-After exploring the data using SQL, I decided a dashboard would be a great way to present the data.  The final dashboard features various slicers which allows users to explore the data based on region, year and artistic discipline.  [You can view a preview of the dashboard here.](https://github.com/alccrts/Data_Visualizations/assets/138128361/4a1099a3-13d3-48b8-8e56-b8fb62359923)
+After exploring the data using SQL, I decided a dashboard would be a great way to present the data.  The final dashboard features various slicers which allows users to explore the data based on region, year and artistic discipline.  [You can view a preview of the dashboard here.](https://github.com/alccrts/Data_Visualizations/assets/138128361/4a1099a3-13d3-48b8-8e56-b8fb62359923)  I used the dashboard and SQL queries to put together some key findings at the top of this page.
 
 
