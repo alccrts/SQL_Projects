@@ -1,7 +1,7 @@
 ![image](https://qul.imgix.net/9d127111-d042-43db-982f-ca34c84e54c9/462298_sld.jpg)
 # Case Study: Danny's Diner 
 
-This case study comes from the [#8weeksqlchallenge](https://8weeksqlchallenge.com/case-study-1/) series.
+In this project, I will practise using SQL to answer a series of hypothetical business questions.  The challenge comes from the [#8weeksqlchallenge](https://8weeksqlchallenge.com/case-study-1/) series.
 
 ## 📃 Contents
 - [Business Problem](#business-problem)
