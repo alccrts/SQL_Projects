@@ -15,7 +15,7 @@ Danny has recently opened a new restaurant. He hopes to deliver a personalised e
 
 ## Data
 
-Danny has provided three datasets: `sales`, `menu`, `members` in the `dannys_dataset` schema.  The data is somewhat limited because for privacy reasons, Danny provided only a sample of his overall customer data.  In addition, the data spans a limited date range due to Danny's business being new. I have analysed the data using PostgreSQL 13 and you can view it at [DB Fiddle](https://www.db-fiddle.com/f/2rM8RAnq7h5LLDTzZiRWcd/138).  
+Danny has provided three datasets: `sales`, `menu`, `members` in the `dannys_dataset` schema.  The data is limited due to privacy reasons, so includes only a sample of his overall customer data.  In addition, the data spans a limited date range due to Danny's business being new. I have analysed the data using PostgreSQL 13 and you can view it at [DB Fiddle](https://www.db-fiddle.com/f/2rM8RAnq7h5LLDTzZiRWcd/138).  
 
 ![image](https://user-images.githubusercontent.com/81607668/127271130-dca9aedd-4ca9-4ed8-b6ec-1e1920dca4a8.png)
 
@@ -203,7 +203,7 @@ WHERE rank = 1;
 
 **6. Which item was purchased first by the customer after they became a member?**
 
-The question asks what customers bought after they become a member, but they data we have .  It is possible a customer became a member on the same day they made an order.  Given that we don't have a more finite 'time' data, we cannot be sure whether the customer became a member first or placed their order first.  To answer this question, I have made the assumption that if a customer placed an order on the same day they become a member, then they became a member first before placing the order.  This seems the most likely scenario, given that being a member comes with promotions that might affect their order.  However, it would be sensible to confirm this with Danny.  
+The question asks what customers bought after they become a member.  Given that we don't have a more finite 'time' data, we cannot be sure whether the customer became a member first or placed their order first.  To answer this question, I have made the assumption that if a customer placed an order on the same day they become a member, then they became a member first before placing the order.  This seems the most likely scenario, given that being a member comes with promotions that might affect their order.  However, it would be sensible to confirm this with Danny.  
 
 Based on the above assumption, I created a CTE table which includes only orders placed by a customer on or after the join date of that customer. I then used **DENSE_RANK()** to organise that data, followed by a **SELECT** statement to query that table to pull the first result or after the members join date.  
 
@@ -254,7 +254,7 @@ WHERE rank = 1
 
 **8. What is the total items and amount spent for each member before they became a member?**
 
-Here I used **SUM** to total the amount spent by each customer and **COUNT** to count the number of items.  These were results were joined with the members table using **JOIN** so that I could filter them to show only results before the join date of members.  I then repeated this query but filtered the results to include only results following the join date of members.  This way I could compare Customer spending before and after their membership to see if the membership was encouraging them to pay more.  In the results below we can see that Customer A began to spend more after he became a member, whereas Customer B spend a little bit less but the amount of itmes they bought did not increase.  We are therefore unable to say for certain if membership encourages customers to pay more.   
+Here I used **SUM** to total the amount spent by each customer and **COUNT** to count the number of items.  These results were joined with the members table using **JOIN** so that I could filter them to show only results before the join date of members.  I then repeated this query but filtered the results to include only results following the join date of members.  This way I could compare Customer spending before and after their membership to see if the membership was encouraging them to pay more.  In the results below we can see that Customer A began to spend more after he became a member, whereas Customer B spend a little bit less but the amount of itmes they bought did not increase.  We are therefore unable to say for certain if membership encourages customers to pay more.   
 
 | customer_id | total_spent_before | total_items_before | total_spent_after | total_items_after |
 | ----------- | ------------------ | ------------------ | ----------------- | ----------------- |
@@ -392,4 +392,4 @@ After analysing the small data set from Danny’s Diner, we were able to identif
 
 In general, customers began tasting Sushi and Curry, but ultimately Ramen was the most purchased item, with all customers switching to Ramen towards their later visits to the restaurant.  The Ramen dish is clearly popular and this knowledge could be used to create a better experience to attract more members.  For example, Danny could also offer double points for purchasing Ramen.
 
-It was encouraging to see that Customers A and B continued their high spending behaviour after they had become members.  However, there was an absence of clear increase in spending following membership, which could suggest that the membership program is not doing enough to increase customer spending.  Danny could consider offering additional benefits if his goal is to increase customer spending. 
+It was encouraging to see that Customers A and B continued their high spending behaviour after they had become members.  However, there was an absence of clear increase in spending following membership, which could suggest that the membership program is not doing enough to increase customer spending.  Danny could consider offering additional benefits if his goal is to increase customer spending among members. 
