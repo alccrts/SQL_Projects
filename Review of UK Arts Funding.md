@@ -17,9 +17,9 @@ In this project, I have taken data from Arts Council England to review their fun
 
 ### Preparing the Data
 
-The Arts Council England is UK's national development agency for creativity and culture.  The council distributes grants funded by The National Lottery to support individual practitioners, communities and cultural organisations with projects that focus on Combined Arts including festivals and carnivals, Dance, Libraries, Literature, Museums, Music, Theatre or Visual Arts.  This analysis will review The National Lottery Grants given during 2018 - 2023.  You can view the [Arts Council Website](https://www.artscouncil.org.uk/ProjectGrants) for more information.   
+The Arts Council England is the UK's development agency for creativity and culture.  The council distributes grants funded by The National Lottery to support individual practitioners, communities and cultural organisations with projects that focus on a full range of artistic disciplines.  This analysis will review The National Lottery Grants given during 2018 - 2023.  You can view the [Arts Council Website](https://www.artscouncil.org.uk/ProjectGrants) for more information.   
 
-The data is published by the council - [you can find the data here](https://www.artscouncil.org.uk/research-and-data/our-data).   Preparing the data required little work, as it was already well processed by the council.  I could use Excel to make some small changes.  My main tasks were:
+The data is published by the council - [you can find the data here](https://www.artscouncil.org.uk/research-and-data/our-data).   Preparing the data required little work, as it was already well processed/cleaned by the council.  I could use Excel to make some small changes.  My main tasks were:
 * combine the annual data of five years into a single CSV file 
 * removed currency formatting
 * changed all text to lower case
