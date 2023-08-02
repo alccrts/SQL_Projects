@@ -1,7 +1,7 @@
 ![image](https://github.com/alccrts/SQL_Projects/assets/138128361/022dfa4e-735a-4bf8-bb09-7b29ce9b400c)
 # Case Study: Funnel Fallout Rates
 
-This case study comes from the [#8weeksqlchallenge](https://8weeksqlchallenge.com/case-study-6/) series.  
+In this project, I answer a series of hypotherical business questions using SQL.  The case study comes from the [#8weeksqlchallenge](https://8weeksqlchallenge.com/case-study-6/) series.  
 
 ## 📃 Contents
 - [Business Problem](#business-problem)
@@ -65,7 +65,7 @@ WITH user_count AS (
 
 **3. What is the unique number of visits by all users per month?**
 
-In order to group results by month, I used the **EXTRACT** operator to identify the month if each visit.  I then used a simple **COUNT** and **GROUP BY** operation to count the visit_ids per month.
+In order to group results by month, I used the **EXTRACT** operator to identify the month of each visit.  I then used a simple **COUNT** and **GROUP BY** operation to count the visit_ids per month.
     
 ```sql  
     SELECT
@@ -110,7 +110,7 @@ This query used **COUNT** and **GROUP BY** to count the number of events for eac
 ***
 **5. What is the percentage of visits which have a purchase event?**
 
-Despite being a simple percentage calculation, I found this question quite tricky.  Everything I tried returned the result of zero.  After some research, I discovered that this was because the character type of my **SELECT** statments were coming out as intergers, but the result of my division was a decimal number.  I therefore used the **CASE** operator to change the character type to float.  I was then able to multiple this result by 100 to get a percentage number. 
+Despite being a simple percentage calculation, I found this question quite tricky.  Everything I tried returned the result of zero.  After some research, I discovered that this was because the character type of my **SELECT** statments results were coming out as intergers, but the result of my division was a decimal number.  I therefore used the **CASE** operator to change the character type to float.  I was then able to multiple this result by 100 to get a percentage number. 
 
 ```sql
     SELECT 
