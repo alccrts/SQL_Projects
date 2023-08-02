@@ -5,14 +5,14 @@ In this project, I have taken a dataset from the Metropolitan Museum of Art in N
 
 ## Step 1: Import the data
 
-The dataset I will be using is published by The Metropolitan Museum of Art, which provides [select datasets](https://github.com/metmuseum/openaccess/) of information on more than 470,000 artworks in its collection.  The dataset is licensed for unrestricted commercial and noncommercial use and contains over 480,000 records and over 50 columns.  It includes variables such `object_name`, `artist_name`, `object_ID` and `dimensions`.  I downloaded the data as a CSV file from Github and previewed it in Excel.  A snapshot of the data can be seen below.   
+The dataset I will be using is published by The Metropolitan Museum of Art, which provides [select datasets](https://github.com/metmuseum/openaccess/) of information on more than 470,000 artworks in its collection.  The dataset is licensed for unrestricted commercial and noncommercial use.  It includes variables such `object_name`, `artist_name`, `object_ID` and `dimensions`.  I downloaded the data as a CSV file from Github and previewed it in Excel.  A snapshot of the data can be seen below.   
 
 ![image](https://github.com/alccrts/SQL_Projects/assets/138128361/d6746e89-2516-4e51-a106-0406b26c9c41)
 
 I uploaded the file to BigQuerey to begin the cleaning process.  Due to the data being so messy, I received two error messages that prevented the file from being uploaded:
 
   * <em>"Error: Missing close double quote (") character"</em> - this was returned because the data contains newline characters, but the BigQuery default is to assume that CSV data does not contain newlines.  The solution is to 'allow newlines' in advanced options `Advanced Options -> Quoted New lines`
-  * <em>"Error: could not parse as INT64 for field XXX Unable to parse file"</em> - this was returned because I had selected the option for BiqQuery to automatically detected the data types/schema, but because the data is unclean, there are many columns with inconsistent data types.  The solution was to allow for some errors so that the file could be uploaded `Advanced Options -> Number of Errors Allowed: 100`
+  * <em>"Error: could not parse as INT64 for field XXX Unable to parse file"</em> - this was returned because I had selected the option for BiqQuery to automatically detect the data types/schema, but because the data is unclean, there are many columns with inconsistent data types.  The solution was to allow for some errors so that the file could be uploaded `Advanced Options -> Number of Errors Allowed: 100`
 
 Once these errors were corrected, the dataset successfully imported.  A snapshot of the schema can be viewed below. 
 
@@ -20,7 +20,7 @@ Once these errors were corrected, the dataset successfully imported.  A snapshot
 
 ## Step 2: Clean the data.
 
-My next step was to preview the data using the SQL query below.  I could then review the columns and consider where to begin the cleaning process.  It was then important to understand the purpose of my project and what I was cleaning the data for as this would have an impact of the data process.  I had decided to use the data to create a simple visualisation that summarises the contents of the museum and so I would bear this in mind as I clean and analyse the data. 
+My next step was to preview the data using the SQL query below.  I could then review the columns and consider where to begin the cleaning process.  It was then important to understand the purpose of my project and what I was cleaning the data for as this would have an impact on how I clean the data.  I decided to use the data to create a simple visualisation that summarises the contents of the museum and so I would bear this in mind as I clean and analyse it.
 
 ```sql
 SELECT *
@@ -52,7 +52,7 @@ SELECT
 FROM `polar-fulcrum-392507.met_art_data.met_art_data`
 ```
 
-Next, I used an embedded **SELECT** statement to reveal the records which shared an `object_number`.  I could clearly see from these results that although they shared the same `object_number`, the other details of the objects were different and were therefore not duplicate records.  I considerd using the **UPDATE** option to edit these records so that they had unique object numbers, but given that I don't know how or why object numbers are assigned to objects, I decided it was best not to change them.  Besides, I was now satisifed that each record had a unique `object_id` and that there were no duplicate records.  
+Next, I used an embedded **SELECT** statement to reveal the records which shared an `object_number`.  I could clearly see from these results that although they shared the same `object_number`, the other details of the objects were different and were therefore not duplicate records.  I considerd using the **UPDATE** option to edit these records so that they had unique object numbers, but given that I don't know how or why object numbers are assigned, I decided it was best not to change them.  Besides, I was now satisifed that each record had a unique `object_id` and that there were no duplicate records.  
 
 ```sql
 
@@ -104,7 +104,7 @@ WHERE department IS NULL
 
 ![image](https://github.com/alccrts/SQL_Projects/assets/138128361/c5125e63-047a-41af-825c-28f740256db5)
 
-I repeated this for the `object_name` column.  The results showed similar categories such as 'Platter' and 'Meat Platter' and 'Shoe Buckle' and 'Buckle'.  If possible, I would consults with the owner of the dataset to confirm whether or not the distinction between these categories were important.  For the sake of this project, I have decided they are not important to so I have changed combined the similar categories using the following query.
+I repeated this for the `object_name` column.  The results showed similar categories such as 'Platter' and 'Meat Platter' and 'Shoe Buckle' and 'Buckle'.  If possible, I would consult with the owner of the dataset to confirm whether or not the distinction between these categories were important.  For the sake of this project, I have decided they are not important so I have combined the similar categories using the following query.
 
 ```sql
 
@@ -117,7 +117,7 @@ SET object_name = 'Platter'
 WHERE object_name = 'Meat platter'
 ```
 
-For tidiness, I converted all `object_name` to title case with the following query.
+For tidiness, I converted `object_name` entries to title case with the following query.
 
 ```sql
 UPDATE `polar-fulcrum-392507.met_art_data.met_art_data`
@@ -125,7 +125,7 @@ SET object_name = INITCAP(object_name)
 WHERE object_name IS NOT NULL
 ```
 
-Cleaning the field `Country` was the most complex task throughout this cleaning process.  There were over 950 distinct values for Country.  There were several complications such as multiple variations of the same country, spelling mistakes, countries broken down into regions, city names instead of countries, multiple countries included in the same field, with different types of delimiters used.  It took several hours to clean the list.  Here is a summary of some of the SQL steps taken:
+Cleaning the field `Country` was the most complex task throughout this cleaning process.  There were over 950 distinct values for Country.  There were several complications such as multiple variations of the same country, spelling mistakes, countries broken down into regions, city names instead of countries, multiple countries included in the same field, with different types of delimiters used.  It took a long to clean the list.  Here is a summary of some of the SQL steps taken:
 
 ```sql
 UPDATE `polar-fulcrum-392507.met_art_data.met_art_data` -- standaradise variations of United States to USA.  
@@ -212,7 +212,7 @@ DROP COLUMN Classification,
 DROP COLUMN Region
 ```
 
-There were several fields that could be relevant to my analysis but I noticed that most of the data was NULL.  I ran the below query to calculate the percentage of NULL values in these columns.  Given that so many were values were null (50 - 95%), I decided to drop these columns as well because they would not tell me much about the overall collection. 
+There were several fields that could be relevant to my analysis but I noticed that most of the data was NULL.  I ran the below query to calculate the percentage of NULL values in these columns.  For some of these columns 50 - 95% of the values were null, so I decided to drop them because they would not tell me much about the overall collection. 
 
 ```sql
 SELECT 
@@ -241,7 +241,7 @@ DROP COLUMN Region;
 
 **Looking for outliers** 
 
-I decided to check for outliers in column `AccessionYear` by ordering the columns and showing the first and last 50 results.  The earliest accesstion year was 1870.  This was when the museum was founded and so would not be an outlier.  The latest accession was in 2023, which is also unlikely to be an outlier.  
+I decided to check for outliers in the column `AccessionYear` by ordering the columns and showing the first and last 50 results.  The earliest accesstion year was 1870.  This was when the museum was founded and so would not be an outlier.  The latest accession was in 2023, which is also unlikely to be an outlier.  
 
 ```sql
 SELECT * FROM `polar-fulcrum-392507.met_art_data.met_art_data`
@@ -270,7 +270,7 @@ DELETE FROM `polar-fulcrum-392507.met_art_data.met_art_data`
 WHERE AccessionYear IS NULL
 ```
 
-At this point I was satisfied that the data was sufficiently clean for my purposes.  The final step I took was to merge another the column in a separte table that I had created to clean the countries list.  I then exported the data as a CSV file, ready to be uploaded to Tablaeu or similar to analyse further. 
+At this point I was satisfied that the data was sufficiently clean for my purposes.  The final step I took was to merge columns from a a separte table that I had created to clean the countries list.  I then exported the data as a CSV file, ready to be uploaded to Tablaeu or similar to analyse further. 
 
 ```sql
 
@@ -283,23 +283,3 @@ UPDATE `polar-fulcrum-392507.met_art_data.met_art_data-2023-07-12T14_00_02_resto
 WHERE new_countries IS NULL
     ;
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
